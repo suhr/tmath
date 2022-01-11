@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "tmath"
+version = "0.1.0"
+description = ""
+authors = ["suhr"]
+license = "CC BY-SA"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+livereload = "^2.6"
+myst-parser = {version = "^0.18", extras = ["linkify"]}
+sphinx = "^4.5"
+sphinx-book-theme = "^0.3"
+sphinx-copybutton = "^0.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

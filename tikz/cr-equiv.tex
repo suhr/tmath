@@ -1,0 +1,21 @@
+\documentclass[crop,tikz]{standalone}
+\usepackage{amsmath}
+\usepackage{quiver}
+
+\begin{document}
+\begin{tikzpicture}[baseline= (a).base]
+  \node[scale=2] (a) at (0,0){
+    \begin{tikzcd}
+      {{\color{red}a}} && {{\color{red}b}} && {{\color{red}c}} \\
+      & {{\color{red}ab}} && {{\color{red}bc}} \\
+      && {{\color{red}abc}}
+      \arrow["{*}", from=1-1, to=2-2]
+      \arrow["{*}"', from=1-3, to=2-2]
+      \arrow["{*}", from=1-3, to=2-4]
+      \arrow["{*}"', from=1-5, to=2-4]
+      \arrow["{*}", from=2-2, to=3-3]
+      \arrow["{*}"', from=2-4, to=3-3]
+    \end{tikzcd}
+  };
+\end{tikzpicture}
+\end{document}
