@@ -1,7 +1,7 @@
 --- Пропрозиционная логика
 
 example {P Q: Prop}(pq: P ∨ Q)(np: ¬P): Q :=
-  pq.elim (λp => (np p).elim) (λq => q)
+  pq.elim (λp => (np p).elim) id
 
 example {P Q R: Prop}(pqr : P ∧ (Q ∨ R)): (P ∧ Q) ∨ (P ∧ R) :=
   let ⟨p,qr⟩ := pqr;  qr.elim (λq => Or.inl ⟨p,q⟩) (λr => Or.inr ⟨p,r⟩)
@@ -88,3 +88,41 @@ example {P Q: α → Prop}(aa: (∀x, P x) ∨ (∀x, Q x)): ∀x, P x ∨ Q x :
 
 example {P Q: α → Prop}(ee: (∃x, P x) ∨ (∃x, Q x)): ∃x, P x ∨ Q x :=
   ee.elim (λ⟨x,p⟩ => ⟨x, Or.inl p⟩) (λ⟨x,q⟩ => ⟨x, Or.inr q⟩)
+
+-- Классическая логика
+
+example {P: Prop}(nem: ¬(P ∨ ¬P)): False :=
+  nem (Or.inr λp => nem (Or.inl p))
+
+section classical
+open Classical
+
+example {P: Prop}(nnp: ¬¬P): P :=
+  (em P).elim id (λnp => (nnp np).elim)
+
+example {P: Prop}(nnp: ¬¬P): P := by
+  refine (em P).elim ?_ ?_
+  · intro (p: P)
+    exact p
+  · intro (np: ¬P)
+    exact False.elim $ nnp np
+
+example {P Q: Prop}(pq: P → Q): ¬P ∨ Q :=
+  (em P).elim (λp => Or.inr $ pq p) Or.inl
+
+example {P Q: Prop}(npq : ¬(P ∧ Q)): ¬P ∨ ¬Q :=
+  (em P).elim (λp => Or.inr $ λq => npq ⟨p,q⟩) Or.inl
+
+example {P Q: Prop}(np_q: ¬P → Q): ¬Q → P :=
+  λnq => (em P).elim id (λnp => (nq $ np_q np).elim)
+
+example {P Q: Prop}(pq_p: (P → Q) → P): P :=
+  (em P).elim id (λnp => pq_p (λp => (np p).elim))
+
+-- Одновременно em и byContradiction
+example {α: Type}{P: α → Prop}(na: ¬∀x, P x): ∃x, ¬P x := by
+  refine (em (∃x, ¬P x)).elim id (λne: (¬∃x, ¬P x) => ?_)
+  let ap: ∀x, P x :=  λx => byContradiction (λnp => ne ⟨x, np⟩)
+  exact (na ap).elim
+
+end classical
