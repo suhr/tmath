@@ -1,0 +1,50 @@
+\documentclass[12pt]{standalone}
+\usepackage[fontsize=18pt]{fontsize}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\begin{document}
+\begin{tikzpicture}[
+  inner sep=0pt,
+  outer sep=0pt,
+  baseline=(lx1.base),
+]
+  \path[every node/.append style={anchor=base west}]
+    (0, 0)
+    \foreach \name/\code in {
+      tmp/\lambda,
+      lx1/x,
+      tmp/.\;\lambda,
+      lx2/x,
+      tmp/.\;,
+      x/x %
+    } {
+      node (\name) {$\code$}
+      (\name.base east)
+    }
+  ;
+  \path[
+    every node/.append style={
+      anchor=base,
+      font=\slshape\scriptsize,
+    },
+  ]
+    (lx1.base) -- node[below=1\baselineskip] (bx) {} (x)
+  ;
+  \begin{scope}[
+    >={Stealth[length=5pt]},
+    thick,
+    rounded corners=0.5pt,
+    shorten <=.3em,
+    shorten >=.3em,
+  ]
+    \def\BndArrow#1#2#3{
+      \draw[red,->]
+        (#2.north) ++(0, .3em) coordinate (tmp)
+        (#1) |- (tmp) -| (#3)
+      ;%
+    }
+    \BndArrow{lx1}{bx}{x}
+  \end{scope}
+\end{tikzpicture}
+\end{document}
