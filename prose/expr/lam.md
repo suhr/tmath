@@ -116,9 +116,9 @@ $$\begin{aligned}
 (λx\,y.\; x)\ ((λx.\;x)\ z) &⟶ (λx\,y.\; x)\ z &⟶ λy.\;z
 \end{aligned}$$
 
-Несмотря на то, что вычислять можно по-разному, всегда есть возможность придти к одному и тому же результату.
+Несмотря на то, что вычислять можно по разному, всегда есть возможность придти к одному и тому же результату.
 
-**Теорема (Чёрч — Россер):** Пусть ${\color{red}e} \xrightarrow{\;*\;} {\color{red}a}$ и ${\color{red}e} \xrightarrow{\;*\;} {\color{red}b}$. Тогда существует такое выражение $\color{red}c$, что ${\color{red}a} \xrightarrow{\;*\;} {\color{red}с}$ и ${\color{red}b} \xrightarrow{\;*\;} {\color{red}c}$.
+**Теорема (Чёрч — Россер):** Пусть ${\color{red}e} \xrightarrow{\\;\*\\;} {\color{red}a}$ и ${\color{red}e} \xrightarrow{\\;\*\\;} {\color{red}b}$. Тогда существует такое выражение $\color{red}c$, что ${\color{red}a} \xrightarrow{\\;\*\\;} {\color{red}с}$ и ${\color{red}b} \xrightarrow{\\;\*\\;} {\color{red}c}$.
 
 Это важнейшая теорема лямбда-исчисления. Но доказывать мы её не будем.
 
@@ -126,7 +126,7 @@ $$\begin{aligned}
 
 ![](/_img/church-rosser.svg)
 
-Выражение $\color{red}a$ вычислительно равно выражению $\color{red}b$ (пишется ${\color{red}a} \equiv {\color{red}b}$), если существует такое выражение $\color{red}c$, что ${\color{red}a} \xrightarrow{\;*\;} {\color{red}c}$ и ${\color{red}b} \xrightarrow{\;*\;} {\color{red}c}$.
+Выражение $\color{red}a$ вычислительно равно выражению $\color{red}b$ (пишется ${\color{red}a} \equiv {\color{red}b}$), если существует такое выражение $\color{red}c$, что ${\color{red}a} \xrightarrow{\\;\*\\;} {\color{red}c}$ и ${\color{red}b} \xrightarrow{\\;\*\\;} {\color{red}c}$.
 
 Вычислительное равенство удовлетворяет основным свойствам отношения эквивалентности:
 
@@ -140,7 +140,7 @@ $$\begin{aligned}
 
 Выражение $\color{red}n$ находится в нормальной форме, если к нему невозможно применить правило вычисления.
 
-Говорят, что $\color{red}n$ является нормальной формой выражения $\color{red}e$, если $\color{red}n$ находится в нормальной форме и  ${\color{red}e} \xrightarrow{\;*\;} {\color{red}n}$.
+Говорят, что $\color{red}n$ является нормальной формой выражения $\color{red}e$, если $\color{red}n$ находится в нормальной форме и  ${\color{red}e} \xrightarrow{\\;\*\\;} {\color{red}n}$.
 
 Из теоремы Чёрча — Россера следует, что у выражения может быть только одна нормальная форма. Кроме того, если два выражения имеют одну и ту же нормальную форму, то они вычислительно равны.
 
