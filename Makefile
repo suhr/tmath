@@ -108,4 +108,5 @@ build/%.svg: build/%.pdf
 	pdf2svg $< $@
 
 tikz: build/church-rosser.svg build/cr-equiv.svg build/syn1.svg build/syn2.svg \
-	build/lxy.fyx.svg build/lxx1.svg build/lxx2.svg
+	build/lxy.fyx.svg build/lxx1.svg build/lxx2.svg build/imp-ex.svg build/imp-red.svg \
+	build/all-red.svg build/conj-red.svg build/disj-red.svg build/ex-red.svg

@@ -1,0 +1,18 @@
+\documentclass[12pt,border=10pt,varwidth=300em]{standalone}
+\usepackage{bussproofs}
+\begin{document}
+  \begin{prooftree}
+    \def\fCenter{\mbox{$\;\vdash\;$}}
+    \Axiom$(P \to Q),(Q \to R), P \fCenter P$
+    \Axiom$(P \to Q) \fCenter P \to Q$
+    \UnaryInf$(P \to Q),(Q \to R) \fCenter P \to Q$
+    \UnaryInf$(P \to Q),(Q \to R),P \fCenter P \to Q$
+    \BinaryInf$(P \to Q),(Q \to R), P \fCenter Q$
+    \Axiom$(P \to Q),(Q \to R) \fCenter Q \to R$
+    \UnaryInf$(P \to Q),(Q \to R),P \fCenter Q \to R$
+    \BinaryInf$(P \to Q),(Q \to R), P \fCenter R$
+    \UnaryInf$(P \to Q),(Q \to R) \fCenter P \to R$
+    \UnaryInf$(P \to Q) \fCenter (Q \to R) \to P \to R$
+    \UnaryInf$\fCenter (P \to Q) \to (Q \to R) \to P \to R$
+  \end{prooftree}
+\end{document}

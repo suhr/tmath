@@ -1,0 +1,20 @@
+\documentclass[12pt,border=10pt,varwidth=300em]{standalone}
+\usepackage{bussproofs}
+\begin{document}
+  \begin{prooftree}
+    \def\fCenter{\mbox{$\;\vdash\;$}}
+    \AxiomC{$\vdots$}
+    \UnaryInf$\fCenter P$
+    \Axiom$P \fCenter P$
+    \UnaryInf$P,Q \fCenter P$
+    \UnaryInf$P \fCenter Q \to P$
+    \UnaryInf$\fCenter P \to Q \to P$
+    \BinaryInf$\fCenter Q \to P$
+    \DisplayProof
+    $\quad\Longrightarrow\quad$
+    \AxiomC{$\vdots$}
+    \UnaryInf$\fCenter P$
+    \UnaryInf$Q \fCenter P$
+    \UnaryInf$\fCenter Q \to P$
+\end{prooftree}
+\end{document}

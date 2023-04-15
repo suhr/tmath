@@ -1,0 +1,34 @@
+\documentclass[12pt,border=10pt,varwidth=300em]{standalone}
+
+\makeatletter
+\DeclareRobustCommand{\rvdots}{%
+  \vbox{
+    \baselineskip4\p@\lineskiplimit\z@
+    \kern-\p@
+    \addvspace{2pt}
+    \hbox{.}\hbox{.}\hbox{.}
+    \addvspace{0.5pt}
+  }
+}
+\makeatother
+
+\usepackage{bussproofs}
+\begin{document}
+  \begin{prooftree}
+    \def\fCenter{\mbox{$\;\vdash\;$}}
+    \AxiomC{$\rvdots$}
+    \UnaryInf$\Gamma \fCenter P$
+    \UnaryInf$\Gamma \fCenter P \vee Q$
+    \AxiomC{$\rvdots$}
+    \UnaryInf$\Gamma,P \fCenter R$
+    \AxiomC{$\rvdots$}
+    \UnaryInf$\Gamma,Q \fCenter R$
+    \TrinaryInf$\Gamma \fCenter R$
+    \DisplayProof
+    $\quad\Longrightarrow\quad$
+    \AxiomC{$\rvdots$}
+    \UnaryInfC{$\Gamma \fCenter P$}
+    \UnaryInfC{$\rvdots$}
+    \UnaryInfC{$\Gamma \fCenter R$}
+\end{prooftree}
+\end{document}

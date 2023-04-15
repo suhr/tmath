@@ -17,7 +17,8 @@
             overrides = [pkgs.poetry2nix.defaultPoetryOverrides]; };
         tl = with pkgs;
           ( texlive.combine
-            { inherit (texlive) scheme-basic standalone xkeyval pgf tikz-cd fontsize; } );
+            { inherit (texlive) scheme-basic standalone xkeyval pgf tikz-cd fontsize
+              varwidth bussproofs; } );
         pyEnv = python.withPackages (p: with p; [poetry]);
       in rec
         { devShell = pkgs.mkShell { buildInputs = [tl pkgs.pdf2svg pyEnv]; };
