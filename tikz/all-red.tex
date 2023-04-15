@@ -1,0 +1,17 @@
+\documentclass[12pt,border=10pt,varwidth=300em]{standalone}
+\usepackage{bussproofs}
+\begin{document}
+  \begin{prooftree}
+    \def\fCenter{\mbox{$\;\vdash\;$}}
+    \AxiomC{$\vdots$}
+    \UnaryInf$\Gamma,x \fCenter \dots$
+    \UnaryInf$\Gamma,x \fCenter \phi$
+    \UnaryInf$\Gamma \fCenter \forall x.\; \phi$
+    \UnaryInf$\Gamma \fCenter \phi[x:=t]$
+    \DisplayProof
+    $\quad\Longrightarrow\quad$
+    \AxiomC{$\vdots$}
+    \UnaryInf$\Gamma \fCenter (\dots)[x := t]$
+    \UnaryInf$\Gamma \fCenter \phi[x:=t]$
+\end{prooftree}
+\end{document}

@@ -1,0 +1,32 @@
+\documentclass[12pt,border=10pt,varwidth=300em]{standalone}
+\usepackage{bussproofs}
+
+\makeatletter
+\DeclareRobustCommand{\rvdots}{%
+  \vbox{
+    \baselineskip4\p@\lineskiplimit\z@
+    \kern-\p@
+    \addvspace{2pt}
+    \hbox{.}\hbox{.}\hbox{.}
+    \addvspace{0.5pt}
+  }
+}
+\makeatother
+
+\begin{document}
+  \begin{prooftree}
+    \def\fCenter{\mbox{$\;\vdash\;$}}
+    \AxiomC{$\rvdots$}
+    \UnaryInf$\Gamma \fCenter \phi[x := t]$
+    \UnaryInf$\Gamma \fCenter \exists x.\;\phi$
+    \AxiomC{$\rvdots$}
+    \UnaryInf$\Gamma,x,\phi \fCenter P$
+    \BinaryInf$\Gamma \fCenter P$
+    \DisplayProof
+    $\quad\Longrightarrow\quad$
+    \AxiomC{$\rvdots$}
+    \UnaryInf$\Gamma \fCenter \phi[x := t]$
+    \UnaryInfC{$\rvdots$}
+    \UnaryInf$\Gamma \fCenter P$
+\end{prooftree}
+\end{document}
