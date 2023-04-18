@@ -1,0 +1,26 @@
+\documentclass[12pt,border=10pt,varwidth=300em]{standalone}
+\usepackage{bussproofs}
+
+\makeatletter
+\DeclareRobustCommand{\rvdots}{%
+  \vbox{
+    \baselineskip4\p@\lineskiplimit\z@
+    \kern-\p@
+    \addvspace{2pt}
+    \hbox{.}\hbox{.}\hbox{.}
+    \addvspace{0.5pt}
+  }
+}
+\makeatother
+
+\newcommand{\ty}[0]{{\mkern 3mu : \mkern 3mu}}
+
+\begin{document}
+  \begin{prooftree}
+    \def\fCenter{\mbox{$\;\vdash\;$}}
+    \AxiomC{$\rvdots$}
+    \UnaryInf$\fCenter x:P$
+    \UnaryInf$q:Q \fCenter x:P$
+    \UnaryInf$\fCenter (\lambda q \ty Q.\; x): Q \to P$
+\end{prooftree}
+\end{document}
