@@ -1,0 +1,25 @@
+\documentclass[12pt,border=10pt,varwidth=300em]{standalone}
+\usepackage{bussproofs}
+\begin{document}
+  \begin{prooftree}
+    \def\fCenter{\mbox{$\;\vdash\;$}}
+
+    \Axiom$X \fCenter X$
+    \Axiom$X \fCenter X$
+    \UnaryInf$X \fCenter X \to Q$
+    \BinaryInf$X \fCenter Q$
+    \UnaryInf$\fCenter X \to Q$
+    \UnaryInf$\fCenter X$
+
+    \Axiom$X \fCenter X$
+    \Axiom$X \fCenter X$
+    \UnaryInf$X \fCenter X \to Q$
+    \BinaryInf$X \fCenter Q$
+    \UnaryInf$\fCenter X \to Q$
+    \UnaryInf$\fCenter X$
+
+    \UnaryInf$\fCenter X \to Q$
+    \BinaryInf$\fCenter Q$
+
+  \end{prooftree}
+\end{document}
