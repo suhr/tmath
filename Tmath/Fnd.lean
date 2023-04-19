@@ -67,7 +67,7 @@ theorem lwfix (f: α → α → ω)(sj: surjective f)(u: ω → ω): ∃x, u x =
   refine ⟨d c, Eq.symm ?_⟩
   calc
     d c = u (f c c) := rfl
-      _ = u (d c)   := by rw[fp] 
+    _   = u (d c)   := by rw[fp] 
 
 end Function
 
