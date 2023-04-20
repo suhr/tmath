@@ -122,18 +122,26 @@ theorem mul_left_cancel {n k p: Nat}(pn: n ≠ 0)(e: n * k = n * p): k = p := by
 -- Сравнение
 
 #print Nat.le
+#check Nat.le.step
 
-theorem le_succ {n k: Nat}(q: n ≤ k): n ≤ k.succ := sorry
+theorem le_succ {n k: Nat}: n ≤ k → n ≤ k.succ := Nat.le.step
 theorem zero_le {n: Nat}: 0 ≤ n :=
-  sorry
+  n.recOn Nat.le.refl (λ_ h => le_succ h)
+
+theorem le_add {n k: Nat}: n ≤ n + k :=
+  k.recOn Nat.le.refl (λ_ h => le_succ h)
+
+theorem le_exists {n k: Nat}(le: n ≤ k): ∃p, n + p = k :=
+  le.recOn ⟨0,rfl⟩ (λ_ ⟨p,h⟩ => ⟨p.succ, congrArg Nat.succ h⟩)
+
+theorem exists_le {n k: Nat}(ex: ∃p, n + p = k): n ≤ k :=
+  ex.elim λp => p.recOn
+    (λ(e: n = k) => e ▸ Nat.le.refl)
+    (λp _ => λ(e: n + p.succ = k) => e.symm ▸ (le_add : n ≤ n + p.succ))
+
 theorem succ_le {n k: Nat}(le: n.succ ≤ k): n ≤ k :=
   sorry
 theorem le_zero {n:Nat}(le: n ≤ 0): n = 0 :=
-  sorry
-
-theorem le_exists {n k: Nat}(le: n ≤ k): ∃p, n + p = k :=
-  sorry
-theorem exists_le {n k: Nat}(ex: ∃p, n + p = k): n ≤ k :=
   sorry
 
 theorem succ_le_suc {n k: Nat}: n ≤ k ↔ n.succ ≤ k.succ :=
