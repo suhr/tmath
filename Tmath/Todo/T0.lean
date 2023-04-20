@@ -4,7 +4,7 @@ theorem add_zero  (n: Nat):   n + 0 = n                  := rfl
 theorem add_one   (n: Nat):   n + 1 = n.succ             := rfl
 theorem add_succ  (n k: Nat): n + k.succ = (n + k).succ  := rfl
 
-theorem zero_add (n: Nat): 0 + n = n := by
+theorem zero_add {n: Nat}: 0 + n = n := by
   refine n.recOn rfl (λn (h: 0+n = n) => ?_)
   show (0+n).succ = n.succ;  rw[h]
 
@@ -26,7 +26,7 @@ example {n k p: Nat}: (n + k) + p = n + (k + p) := by
 theorem add_comm {n k: Nat}: n + k = k + n :=
   n.recOn (by rw[zero_add]; rfl) (λn ih => by simp[add_succ, succ_add, ih])
 
-theorem add_left_comm (n k p: Nat) : n + (k + p) = k + (n + p) :=
+theorem add_left_comm (n k p: Nat): n + (k + p) = k + (n + p) :=
 calc  n + (k + p)
     = (n + k) + p  := by rw[←add_assoc]
   _ = (k + n) + p  := by rw[@add_comm k]
@@ -81,25 +81,79 @@ by rw [←mul_assoc, @mul_comm n, mul_assoc]
 theorem mul_right_distr {n k p: Nat}: (n + k) * p = n * p + k * p :=
 by simp [mul_comm, mul_left_distr]
 
+example {a b c d e: Nat}: (((a * b) * c) * d) * e = (c * ((b * e) * a)) * d :=
+by simp [mul_assoc, mul_comm, mul_left_comm]
+
 -- Больше умножения и сложения
+
+example {n:Nat}: n.succ ≠ 0 := Nat.noConfusion
+example {n:Nat}: 0 ≠ n.succ := Nat.noConfusion
+
+#print Nat.pred
+
+theorem succ_inj {n k: Nat}(e: n.succ = k.succ): n = k :=
+  congrArg Nat.pred e
+
+theorem succ_ne {n:Nat}: n.succ ≠ n :=
+  n.recOn (Nat.noConfusion) (λn h => λ(e: n.succ.succ = n.succ) => h $ succ_inj e)
+
+theorem add_right_cancel {n k p: Nat}: (n+p = k+p) → n = k :=
+  p.recOn id (λ_ h => λe => h $ succ_inj e)
+
+theorem add_left_cancel {n k p: Nat}: (p+n = p+k) → n = k :=
+  add_comm ▸ (@add_comm p k) ▸ add_right_cancel
+
+theorem add_eq_zero_left {n k: Nat}: (n + k = 0) → n = 0 :=
+  k.recOn id (λk h => λ(e: n+k.succ = 0) => h $ congrArg Nat.pred e)
+
+theorem add_eq_zero_right {n k: Nat}: (n + k = 0) → k = 0 :=
+  add_comm ▸ add_eq_zero_left
+
+theorem mul_eq_zero {n k: Nat}: (n * k = 0) → n = 0 ∨ k = 0 :=
+  k.casesOn
+    (λ_ => Or.inr rfl)
+    (λk => λ(e: n*k + n = 0) => Or.inl $ add_eq_zero_right e)
+
+theorem mul_left_cancel {n k p: Nat}(pn: n ≠ 0)(e: n * k = n * p): k = p := by
+  refine (n.recOn ?_ ?_ : ∀p, _) p
+  · sorry
+  · sorry
 
 -- Сравнение
 
--- Вычитание и деление
+#print Nat.le
+
+theorem le_succ {n k: Nat}(q: n ≤ k): n ≤ k.succ := sorry
+theorem zero_le {n: Nat}: 0 ≤ n :=
+  sorry
+theorem succ_le {n k: Nat}(le: n.succ ≤ k): n ≤ k :=
+  sorry
+theorem le_zero {n:Nat}(le: n ≤ 0): n = 0 :=
+  sorry
+
+theorem le_exists {n k: Nat}(le: n ≤ k): ∃p, n + p = k :=
+  sorry
+theorem exists_le {n k: Nat}(ex: ∃p, n + p = k): n ≤ k :=
+  sorry
+
+theorem succ_le_suc {n k: Nat}: n ≤ k ↔ n.succ ≤ k.succ :=
+  sorry
+theorem right_add_le_add {n k p: Nat}: n ≤ k ↔ n + p ≤ k + p :=
+  sorry
+
+theorem le_trans {n k p: Nat} (nk: n ≤ k) (kp: k ≤ p): n ≤ p :=
+  sorry
+theorem le_antisym {n k: Nat} (nk: n ≤ k) (kn: k ≤ n): n = k :=
+  sorry
+theorem le_total (n k: Nat): n ≤ k ∨ k ≤ n :=
+  sorry
 
 #check Nat.sub
 #check Nat.div
 #check Nat.mod
-
--- Конечные числа
-
 #check Fin
 #check Subtype
-
--- Делимость
-
 #check Nat.gcd
-
--- Целые числа
-
 #check Int
+
+#check List
