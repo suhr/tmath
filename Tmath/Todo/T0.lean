@@ -5,26 +5,36 @@ theorem add_one   (n: Nat):   n + 1 = n.succ             := rfl
 theorem add_succ  (n k: Nat): n + k.succ = (n + k).succ  := rfl
 
 theorem zero_add {n: Nat}: 0 + n = n := by
-  refine n.recOn rfl (λn (h: 0+n = n) => ?_)
-  show (0+n).succ = n.succ;  rw[h]
+  refine n.recOn ?z ?s
+  · show 0 + 0 = 0
+    rfl
+  · intro n (h: 0+n = n)
+    show (0+n).succ = n.succ
+    rw[h]
+
+example {n: Nat}: 0 + n = n := by
+  refine n.recOn rfl (λn h => ?_)
+  rw[add_succ, h]
+
+example {n: Nat}: 0 + n = n :=
+  n.recOn rfl (λ_ h => congrArg Nat.succ h)
 
 theorem succ_add {n k: Nat}: n.succ + k = (n + k).succ := by
   refine k.recOn rfl (λk h => ?s)
   show (n.succ + k).succ = (n + k.succ).succ
-  rw[h]; rfl
+  rw[h, add_succ]
 
 theorem add_assoc {n k p: Nat}: (n + k) + p = n + (k + p) := by
-  refine p.recOn rfl (λp ih => ?s)
+  refine p.recOn rfl (λp h => ?s)
   calc
     (n + k) + p.succ = (n + k + p).succ   :=  rfl
-                   _ = (n + (k + p)).succ :=  by rw[ih]
+                   _ = (n + (k + p)).succ :=  by rw[h]
 
-example {n k p: Nat}: (n + k) + p = n + (k + p) := by
-  refine p.recOn rfl (λp ih => ?s)
-  simp[add_succ, ih]
+example {n k p: Nat}: (n + k) + p = n + (k + p) :=
+  p.recOn rfl (λp h => by simp[add_succ, h])
 
 theorem add_comm {n k: Nat}: n + k = k + n :=
-  n.recOn (by rw[zero_add]; rfl) (λn ih => by simp[add_succ, succ_add, ih])
+  n.recOn (by rw[zero_add]; rfl) (λn h => by simp[add_succ, succ_add, h])
 
 theorem add_left_comm (n k p: Nat): n + (k + p) = k + (n + p) :=
 calc  n + (k + p)
@@ -91,14 +101,14 @@ example {n:Nat}: 0 ≠ n.succ := Nat.noConfusion
 
 #print Nat.pred
 
-theorem succ_inj {n k: Nat}(e: n.succ = k.succ): n = k :=
+theorem succ_cancel {n k: Nat}(e: n.succ = k.succ): n = k :=
   congrArg Nat.pred e
 
 theorem succ_ne {n:Nat}: n.succ ≠ n :=
-  n.recOn (Nat.noConfusion) (λn h => λ(e: n.succ.succ = n.succ) => h $ succ_inj e)
+  n.recOn (Nat.noConfusion) (λn h => λ(e: n.succ.succ = n.succ) => h $ succ_cancel e)
 
 theorem add_right_cancel {n k p: Nat}: (n+p = k+p) → n = k :=
-  p.recOn id (λ_ h => λe => h $ succ_inj e)
+  p.recOn id (λ_ h => λe => h $ succ_cancel e)
 
 theorem add_left_cancel {n k p: Nat}: (p+n = p+k) → n = k :=
   add_comm ▸ (@add_comm p k) ▸ add_right_cancel
@@ -124,34 +134,37 @@ theorem mul_left_cancel {n k p: Nat}(pn: n ≠ 0)(e: n * k = n * p): k = p := by
 #print Nat.le
 #check Nat.le.step
 
+theorem le_refl {n: Nat}: n ≤ n := Nat.le.refl
 theorem le_succ {n k: Nat}: n ≤ k → n ≤ k.succ := Nat.le.step
 theorem zero_le {n: Nat}: 0 ≤ n :=
-  n.recOn Nat.le.refl (λ_ h => le_succ h)
+  n.recOn le_refl (λ_ h => le_succ h)
 
 theorem le_add {n k: Nat}: n ≤ n + k :=
-  k.recOn Nat.le.refl (λ_ h => le_succ h)
+  k.recOn le_refl (λ_ h => le_succ h)
 
 theorem le_exists {n k: Nat}(le: n ≤ k): ∃p, n + p = k :=
   le.recOn ⟨0,rfl⟩ (λ_ ⟨p,h⟩ => ⟨p.succ, congrArg Nat.succ h⟩)
 
 theorem exists_le {n k: Nat}(ex: ∃p, n + p = k): n ≤ k :=
   ex.elim λp => p.recOn
-    (λ(e: n = k) => e ▸ Nat.le.refl)
+    (λ(e: n = k) => e ▸ le_refl)
     (λp _ => λ(e: n + p.succ = k) => e.symm ▸ (le_add : n ≤ n + p.succ))
 
 theorem succ_le {n k: Nat}(le: n.succ ≤ k): n ≤ k :=
-  sorry
+  let ⟨p, (e: n.succ + p = k)⟩ := le_exists le
+  exists_le ⟨p.succ, e.symm ▸ succ_add ▸ rfl⟩
+
 theorem le_zero {n:Nat}(le: n ≤ 0): n = 0 :=
-  sorry
+  (le_exists le).elim (λp (e: n + p = 0) => add_eq_zero_left e)
 
-theorem succ_le_suc {n k: Nat}: n ≤ k ↔ n.succ ≤ k.succ :=
-  sorry
-theorem right_add_le_add {n k p: Nat}: n ≤ k ↔ n + p ≤ k + p :=
-  sorry
+theorem add_le_add_left {n k p: Nat}(l: n ≤ k): n + p ≤ k + p := by
+  refine (le_exists l).elim (λq (e: n + q = k) => exists_le ⟨q, ?_⟩)
+  calc  n + p + q = n + q + p  := by simp[add_assoc, add_comm, add_left_comm]
+    _ = k + p                  := by rw[e]
 
-theorem le_trans {n k p: Nat} (nk: n ≤ k) (kp: k ≤ p): n ≤ p :=
+theorem le_trans {n k p: Nat}(nk: n ≤ k)(kp: k ≤ p): n ≤ p :=
   sorry
-theorem le_antisym {n k: Nat} (nk: n ≤ k) (kn: k ≤ n): n = k :=
+theorem le_antisym {n k: Nat}(nk: n ≤ k)(kn: k ≤ n): n = k :=
   sorry
 theorem le_total (n k: Nat): n ≤ k ∨ k ≤ n :=
   sorry
