@@ -1,16 +1,20 @@
 example: 1 + 1 = 2 := rfl
 
-theorem add_zero  (n: Nat):   n + 0 = n                  := rfl
-theorem add_one   (n: Nat):   n + 1 = n.succ             := rfl
-theorem add_succ  (n k: Nat): n + k.succ = (n + k).succ  := rfl
+theorem add_zero  {n: Nat}:   n + 0 = n                  := rfl
+theorem add_one   {n: Nat}:   n + 1 = n.succ             := rfl
+theorem add_succ  {n k: Nat}: n + k.succ = (n + k).succ  := rfl
 
 theorem zero_add {n: Nat}: 0 + n = n := by
   refine n.recOn ?z ?s
   · show 0 + 0 = 0
     rfl
-  · intro n (h: 0+n = n)
-    show (0+n).succ = n.succ
+  · intro n (h: 0 + n = n)
+    show (0 + n).succ = n.succ
     rw[h]
+
+theorem zero_add_match : {n: Nat} → 0 + n = n
+| 0 => rfl
+| Nat.succ n => congrArg Nat.succ (zero_add_match : 0 + n = n)
 
 example {n: Nat}: 0 + n = n := by
   refine n.recOn rfl (λn h => ?_)
@@ -124,10 +128,18 @@ theorem mul_eq_zero {n k: Nat}: (n * k = 0) → n = 0 ∨ k = 0 :=
     (λ_ => Or.inr rfl)
     (λk => λ(e: n*k + n = 0) => Or.inl $ add_eq_zero_right e)
 
-theorem mul_left_cancel {n k p: Nat}(pn: n ≠ 0)(e: n * k = n * p): k = p := by
-  refine (n.recOn ?_ ?_ : ∀p, _) p
-  · sorry
-  · sorry
+theorem mul_left_cancel {n k p: Nat}(pn: n ≠ 0): (n * k = n * p) → k = p := by
+  suffices h: ∀k, (n * k = n * p) → k = p from h k
+  refine p.recOn ?_ ?_
+  · intro k (nk: n * k = 0)
+    exact (mul_eq_zero nk).elim (λz: n = 0 => (pn z).elim) id
+  · intro p h
+    show ∀k, (n * k = n * p.succ) → k = p.succ
+    refine λk => k.casesOn ?_ ?_
+    · intro (e: 0 = n * p + n)
+      exact (pn $ add_eq_zero_right e.symm).elim
+    · intro k (e: n * Nat.succ k = n * Nat.succ p)
+      exact congrArg Nat.succ $ h k (add_right_cancel e)
 
 -- Сравнение
 
@@ -163,11 +175,25 @@ theorem add_le_add_left {n k p: Nat}(l: n ≤ k): n + p ≤ k + p := by
     _ = k + p                  := by rw[e]
 
 theorem le_trans {n k p: Nat}(nk: n ≤ k)(kp: k ≤ p): n ≤ p :=
-  sorry
+  let ⟨a, (ea: n + a = k)⟩ := le_exists nk
+  let ⟨b, (eb: k + b = p)⟩ := le_exists kp
+  let e: n + a + b = p := (congrArg (· + b) ea).trans eb;
+  exists_le ⟨a+b, add_assoc ▸ e⟩
+
 theorem le_antisym {n k: Nat}(nk: n ≤ k)(kn: k ≤ n): n = k :=
-  sorry
-theorem le_total (n k: Nat): n ≤ k ∨ k ≤ n :=
-  sorry
+  let ⟨a, (ea: n + a = k)⟩ := le_exists nk
+  let ⟨b, (eb: k + b = n)⟩ := le_exists kn
+  let e : k + (b + a) = k + 0 := add_assoc ▸ eb.symm ▸ ea
+  let ba: b + a = 0 := add_left_cancel e
+  ((add_eq_zero_right ba) ▸ ea : n + 0 = k)
+
+theorem le_total: {n k: Nat} → n ≤ k ∨ k ≤ n
+| 0, _                   => Or.inl zero_le
+| Nat.succ _, 0          => Or.inr zero_le
+| Nat.succ n, Nat.succ k =>
+  (@le_total n k).elim
+    (λnk => Or.inl $ Nat.succ_le_succ nk)
+    (λkn => Or.inr $ Nat.succ_le_succ kn)
 
 #check Nat.sub
 #check Nat.div
