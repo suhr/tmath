@@ -31,7 +31,7 @@ theorem succ_add {n k: Nat}: n.succ + k = (n + k).succ := by
 theorem add_assoc {n k p: Nat}: (n + k) + p = n + (k + p) := by
   refine p.recOn rfl (λp h => ?s)
   calc
-    (n + k) + p.succ = (n + k + p).succ   :=  rfl
+    (n + k) + p.succ = (n + k + p).succ   :=  by rfl
                    _ = (n + (k + p)).succ :=  by rw[h]
 
 example {n k p: Nat}: (n + k) + p = n + (k + p) :=
@@ -204,3 +204,34 @@ theorem le_total: {n k: Nat} → n ≤ k ∨ k ≤ n
 #check Int
 
 #check List
+
+-- #check [1,2] + [3]
+
+#check List.zipWith
+#check List.replicate
+
+#check HAdd
+instance [h: HAdd α β γ]: HAdd (List α) (List β) (List γ) where
+  hAdd := List.zipWith h.hAdd
+
+#reduce [1,2] + [4,5]
+
+class Scalar (α: Type u) where
+instance: Scalar (Nat) where
+
+instance [Scalar α][h: HAdd α β γ]: HAdd α (List β) (List γ) where
+  hAdd v xs:= List.zipWith h.hAdd (List.replicate xs.length v) xs
+
+instance [Scalar α][h: HSub α β γ]: HAdd α (List β) (List γ) where
+  hAdd v xs:= List.zipWith h.hSub (List.replicate xs.length v) xs
+
+instance [Scalar α][h: HMul α β γ]: HAdd α (List β) (List γ) where
+  hAdd v xs:= List.zipWith h.hMul (List.replicate xs.length v) xs
+
+instance [Scalar α][h: HDiv α β γ]: HAdd α (List β) (List γ) where
+  hAdd v xs:= List.zipWith h.hDiv (List.replicate xs.length v) xs
+
+#reduce 2 + [1, 2, 3]
+#reduce (2:Nat) + List.range 3
+#check List.reverse
+#check OfNat
