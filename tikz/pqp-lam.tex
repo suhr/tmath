@@ -1,0 +1,14 @@
+\documentclass[12pt,border=10pt,varwidth=300em]{standalone}
+\usepackage{bussproofs}
+\begin{document}
+  \begin{prooftree}
+    \def\fCenter{\mbox{$\;\vdash\;$}}
+    \AxiomC{$\vdots$}
+    \UnaryInf$\fCenter x:P$
+    \Axiom$p:P \fCenter p:P$
+    \UnaryInf$(p:P), (q:Q) \fCenter p:P$
+    \UnaryInf$p:P \fCenter (\lambda (q:Q).\; p) : Q \to P$
+    \UnaryInf$\fCenter (\lambda (p:P)(q:Q).\; p) : P \to Q \to P$
+    \BinaryInf$\fCenter (\lambda (p:P)(q:Q).\; p)\ x: Q \to P$
+\end{prooftree}
+\end{document}
