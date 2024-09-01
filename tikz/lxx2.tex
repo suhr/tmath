@@ -12,12 +12,13 @@
   \path[every node/.append style={anchor=base west}]
     (0, 0)
     \foreach \name/\code in {
-      tmp/\lambda,
+      tmp/(\lambda,
       lx1/x,
       tmp/.\;\lambda,
       lx2/x,
       tmp/.\;,
-      x/x %
+      x/x,
+      tmp/)\ a\ b \longrightarrow (\lambda x.\; x)\ b \longrightarrow b %
     } {
       node (\name) {$\code$}
       (\name.base east)
