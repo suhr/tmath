@@ -5,7 +5,6 @@
 
 syn.md
 fun.md
-lam.md
 fol.md
 coc.md
 lean.md
