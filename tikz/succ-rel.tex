@@ -1,0 +1,23 @@
+\documentclass[crop,tikz]{standalone}
+\usepackage{amsmath}
+\usepackage{quiver}
+
+\begin{document}
+\begin{tikzpicture}[baseline= (a).base]
+  \node[scale=1.5] (a) at (0,0){
+  % https://q.uiver.app/#q=WzAsNCxbMCw2LCIwIl0sWzAsNCwiMSJdLFswLDIsIjIiXSxbMCwwLCJcXGRvdHMiXSxbMCwxLCJzdWNjUmVsIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDIsInN1Y2NSZWwiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsMywiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dXQ==
+  \begin{tikzcd}
+	\cdots \\
+	\\
+	2 \\
+	\\
+	1 \\
+	\\
+	0
+	\arrow[no head, from=3-1, to=1-1]
+	\arrow["succRel"', no head, from=5-1, to=3-1]
+	\arrow["succRel"', no head, from=7-1, to=5-1]
+  \end{tikzcd}
+  };
+\end{tikzpicture}
+\end{document}
