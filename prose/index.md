@@ -5,4 +5,5 @@
 
 basics/index.md
 misc/index.md
+community.md
 ```

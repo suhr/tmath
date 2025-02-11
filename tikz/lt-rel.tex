@@ -1,0 +1,34 @@
+\documentclass[crop,tikz]{standalone}
+\usepackage{amsmath}
+\usepackage{quiver}
+
+\begin{document}
+\begin{tikzpicture}[baseline= (a).base]
+  \node[scale=1.5] (a) at (0,0){
+  % https://q.uiver.app/#q=WzAsMTYsWzQsMCwiNCJdLFsyLDIsIjMiXSxbNCwyLCIyIl0sWzYsMiwiMSJdLFsxLDMsIjIiXSxbMiwzLCIxIl0sWzgsMiwiMCJdLFszLDMsIjAiXSxbMCw0LCIxIl0sWzEsNCwiMCJdLFswLDUsIjAiXSxbMiw0LCIwIl0sWzQsMywiMSJdLFs1LDMsIjAiXSxbNCw0LCIwIl0sWzYsMywiMCJdLFswLDEsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCIiLDIseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzQsOCwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs0LDksIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbOCwxMCwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDUsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNSwxMSwiIiwyLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxLDcsIiIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCwyLCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzIsMTIsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiwxMywiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxMiwxNCwiIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFswLDMsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMCw2LCIiLDAseyJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzMsMTUsIiIsMCx7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+  \begin{tikzcd}
+	&&&& 4 \\
+	\\
+	&& 3 && 2 && 1 && 0 \\
+	& 2 & 1 & 0 & 1 & 0 & 0 \\
+	1 & 0 & 0 && 0 \\
+	0
+	\arrow[no head, from=1-5, to=3-3]
+	\arrow[no head, from=1-5, to=3-5]
+	\arrow[no head, from=1-5, to=3-7]
+	\arrow[no head, from=1-5, to=3-9]
+	\arrow[no head, from=3-3, to=4-2]
+	\arrow[no head, from=3-3, to=4-3]
+	\arrow[no head, from=3-3, to=4-4]
+	\arrow[no head, from=3-5, to=4-5]
+	\arrow[no head, from=3-5, to=4-6]
+	\arrow[no head, from=3-7, to=4-7]
+	\arrow[no head, from=4-2, to=5-1]
+	\arrow[no head, from=4-2, to=5-2]
+	\arrow[no head, from=4-3, to=5-3]
+	\arrow[no head, from=4-5, to=5-5]
+	\arrow[no head, from=5-1, to=6-1]
+\end{tikzcd}
+  };
+\end{tikzpicture}
+\end{document}
