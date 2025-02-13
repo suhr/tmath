@@ -722,7 +722,7 @@ def indSuccRel: Ind Nat.succRel :=
 #print Acc.rec
 #check Acc.recOn
 
-def wf_of_ind {r: α → α → Prop}(ind: Ind r): ∀x, Acc r x :=
+def wf_of_ind {r: α → α → Prop}(ind: Ind.{0} r): ∀x, Acc r x :=
   ind Acc.intro
 
 noncomputable def ind_of_wf {r: α → α → Prop}(wf: ∀x, Acc r x): Ind r :=
