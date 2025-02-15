@@ -1690,3 +1690,7 @@ theorem mul_mod (m n k: Nat): (m * n) % k = ((m % k) * (n % k)) % k := by reader
 Леммы также можно найти на сайте https://loogle.lean-lang.org/. Этот сайт ищет леммы не только среди лемм стандартной библиотеки Lean, но также и в Mathlib — одной из крупнейших библиотек компьютерных доказательств. Хотя эта книга не использует Mathlib, эта библиотека может быть весьма полезна в личных проектах.
 
 Остальную документацию по Lean можно найти на [официальном сайте Lean](https://lean-lang.org/documentation/). В частности, там можно найти [список всех тактик](https://lean-lang.org/doc/reference/latest/Tactic-Proofs/Tactic-Reference/), являющихся частью стандартной библиотеки Lean.
+
+[^pm]: На самом деле, конечно, в Principia Mathematica доказывается нечто другое. Подробнее на эту тему см. https://blog.plover.com/math/PM.html.
+
+[^nolz]: Автор нашёл это доказательство с помощью `#reduce not_one_le_zero`, когда эта лемма доказывалась с помощью `exists_of_le`.
