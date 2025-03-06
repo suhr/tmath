@@ -143,7 +143,7 @@ Exists.rec.{u}: ∀ {α: Sort u} {p: α → Prop} {motive: Exists p → Prop},
 
 ```lean
 theorem Exists.elim {α: Sort u} {p: α → Prop} {b: Prop}
-    (h₁: Exists (λx => p x)) (h₂: ∀a: α, p a → b): b :=
+    (h₁: Exists (λx ↦ p x)) (h₂: ∀a: α, p a → b): b :=
   Exists.rec h₂ h₁
 ```
 
@@ -244,7 +244,7 @@ Not.elim.{u_1} {p: Prop} {α: Sort u_1} (H1: ¬p) (H2: p): α
 - `have name: type := val;  expr` это то же, что и аналогичное выражение с `let`, но для доказательств высказываний
   - `have: type := val` это то же, что и `have this: type := val`
   - Указание типа можно иногда опустить
-- `suffices: h type from expr1; expr2` это удобная форма выражения `(λh: type => expr1) expr2`. В рассуждениях это соответствует конструкции «чтобы доказать Y, достаточно доказать X».
+- `suffices: h type from expr1; expr2` это удобная форма выражения `(λh: type ↦ expr1) expr2`. В рассуждениях это соответствует конструкции «чтобы доказать Y, достаточно доказать X».
 - `show type from expr` это другая форма выражения `(expr : type)`
 
 Перейдём теперь к числам и операциям над ними. Мы уже не раз определяли натуральные числа: натуральное число это либо нуль, либо число, следующее за другим натуральным числом. В Lean, тип натуральных чисел определён следующим образом:
@@ -270,11 +270,11 @@ def Nat.recOn: {motive: Nat → Sort u} →
     (t: Nat) →
     motive Nat.zero → ((n: Nat) → motive n → motive n.succ) →
     motive t :=
-  λ{motive} t zero succ => Nat.rec zero succ t
+  λ{motive} t zero succ ↦ Nat.rec zero succ t
 
 def Nat.casesOn: {motive: Nat → Sort u} →
     (t: Nat) → motive Nat.zero → ((n: Nat) → motive n.succ) → motive t :=
-  λ{motive} t zero succ => Nat.rec zero (fun n n_ih => succ n) t
+  λ{motive} t zero succ ↦ Nat.rec zero (fun n n_ih => succ n) t
 ```
 
 Кроме использования `casesOn`, значение индуктивного типа можно разобрать используя сопоставление с образцом. Для этого в Lean есть выражение `match ... with ...`. Вот пример его использования:
@@ -303,7 +303,7 @@ def Nat.add: Nat → Nat → Nat
 ```lean
 noncomputable
 example (n k: Nat): Nat :=
-  k.recOn n (λ_ s => Nat.succ s)
+  k.recOn n (λ_ s ↦ Nat.succ s)
 ```
 
 Lean это одновременно и средство доказательство теорем, и язык программирования. Ядро Lean, ответственное за проверку типов, оперирует рекурсорами, однако компилятор в машинный код понимает только сопоставление с образцом. Ключевое слово `noncomputable` (не имеющее отношения к математическому понятию вычислимости) указывает, что функция не предназначена для компиляции.
@@ -319,7 +319,7 @@ Lean это одновременно и средство доказательс�
 Скомпилированный код выполняется намного быстрее, чем код, интерпретируемый ядром Lean. Однако, компиляция применима только к выражениям, результатом которых является значение типа данных. Напротив, команда `#reduce` способно символьно вычислять выражения даже внутри абстракции:
 
 ```lean
-#reduce λn => n + 3
+#reduce λn ↦ n + 3
 ```
 
 Перейдём, наконец, к доказательствам. Легенда гласит, что Уайтхеду и Расселу потребовалось более сотни страниц чтобы доказать, что $1+1 = 2$ [^pm]. Конструктивная природа исчисления построений, однако, позволяет доказать это высказывание в одну строчку:
@@ -347,7 +347,7 @@ theorem add_succ  (n k: Nat): n + k.succ = (n + k).succ  := rfl
 theorem zero_add (n: Nat): 0 + n = n :=
   n.recOn
     (show 0 + 0 = 0 from rfl)
-    (λn (h: 0 + n = n) =>
+    (λn (h: 0 + n = n) ↦
       show 0 + n.succ = n.succ from
       congrArg Nat.succ h)
 ```
@@ -377,7 +377,7 @@ $$\begin{aligned}
 example (n: Nat): 0 + n = n :=
   n.recOn
     rfl
-    (λn (h: 0 + n = n) =>
+    (λn (h: 0 + n = n) ↦
       calc
         0 + n.succ = (0 + n).succ := add_succ 0 n
         _          = n.succ       := h.symm ▸ (rfl : n.succ = n.succ))
@@ -506,7 +506,7 @@ h : 0 + n = n
 ⊢ 0 + n.succ = n.succ
 ```
 
-Тактика `intro ...` действует как `refine λ... => ?_`. Ввод новой переменной затеняет предыдущую переменную с тем же именем, и Lean Infoview помечает затенённую переменную символом `✝`.
+Тактика `intro ...` действует как `refine λ... ↦ ?_`. Ввод новой переменной затеняет предыдущую переменную с тем же именем, и Lean Infoview помечает затенённую переменную символом `✝`.
 
 Завершим доказательство, закрыв вторую цель:
 
@@ -526,7 +526,7 @@ example (n: Nat): 0 + n = n := by
 
 ```lean
 example (n: Nat): 0 + n = n := by
-  refine n.recOn rfl (λn h => ?_)
+  refine n.recOn rfl (λn h ↦ ?_)
 ```
 
 Контекст доказательства:
@@ -541,7 +541,7 @@ h : 0 + n = n
 
 ```lean
 example (n: Nat): 0 + n = n := by
-  refine n.recOn rfl (λn h => ?_)
+  refine n.recOn rfl (λn h ↦ ?_)
   rw [add_succ]
 ```
 
@@ -559,7 +559,7 @@ h : 0 + n = n
 
 ```lean
 example (n: Nat): 0 + n = n := by
-  refine n.recOn rfl (λn h => ?_)
+  refine n.recOn rfl (λn h ↦ ?_)
   rw [add_succ]
   rw [h]
 ```
@@ -570,7 +570,7 @@ example (n: Nat): 0 + n = n := by
 
 ```lean
 example (n: Nat): 0 + n = n := by
-  refine n.recOn rfl (λn h => ?_)
+  refine n.recOn rfl (λn h ↦ ?_)
   show (0 + n).succ = n.succ
   rw [h]
 ```
@@ -594,7 +594,7 @@ theorem add_comm (n k: Nat): n + k = k + n := by reader
 
 ```lean
 theorem add_assoc (m n k: Nat): (m + n) + k = m + (n + k) := by
-  refine k.recOn rfl (λk h => ?_)
+  refine k.recOn rfl (λk h ↦ ?_)
   calc
     (m + n) + k.succ = ((m + n) + k).succ := by rw [add_succ]
     _                = (m + (n + k)).succ := by rw [h]
@@ -606,7 +606,7 @@ theorem add_assoc (m n k: Nat): (m + n) + k = m + (n + k) := by
 
 ```lean
 example (m n k: Nat): (m + n) + k = m + (n + k) := by
-  refine k.recOn rfl (λk h => ?s)
+  refine k.recOn rfl (λk h ↦ ?s)
   calc
     (m + n) + k.succ = ((m + n) + k).succ := rfl
     _                = (m + (n + k)).succ := by rw [h]
@@ -616,7 +616,7 @@ example (m n k: Nat): (m + n) + k = m + (n + k) := by
 
 ```lean
 example {m n k: Nat}: (m + n) + k = m + (n + k) :=
-  k.recOn rfl (λk h => by simp only [add_succ, h])
+  k.recOn rfl (λk h ↦ by simp only [add_succ, h])
 ```
 
 Тактика `simp` это автоматизированная версия тактики `rw`, которая, вместо того, чтобы применять равенства по порядку, сама ищет нужную последовательность применений. Если она не может закрыть цель, она осуществляет направленное переписывание цели пока это возможно.
@@ -736,7 +736,7 @@ theorem le_succ_of_le {n k: Nat}: n ≤ k → n ≤ k.succ := Nat.le.step
 theorem le_trans {m n k: Nat}(mn: m ≤ n)(nk: n ≤ k): m ≤ k :=
   nk.recOn
     (show m ≤ n from mn)
-    (λ{k} (_: n ≤ k) (h: m ≤ k) =>
+    (λ{k} (_: n ≤ k) (h: m ≤ k) ↦
       show m ≤ k.succ from le_succ_of_le h)
 ```
 
@@ -773,10 +773,10 @@ theorem le_of_succ_le_succ {n m: Nat}: n.succ ≤ m.succ → n ≤ m := by reade
 ```lean
 theorem not_one_le_zero: ¬1 ≤ 0 := by
   suffices any_zero: ∀k, 1 ≤ k → k = 0 → False from
-    λh => any_zero 0 h rfl
-  exact λk ok => ok.recOn
-    (λ(h: 1 = 0) => succ_ne_zero 0 h)
-    (λ{k} _ _ (ksz: k.succ = 0) => succ_ne_zero k ksz)
+    λh ↦ any_zero 0 h rfl
+  exact λk ok ↦ ok.recOn
+    (λ(h: 1 = 0) ↦ succ_ne_zero 0 h)
+    (λ{k} _ _ (ksz: k.succ = 0) ↦ succ_ne_zero k ksz)
 ```
 
 Хотя это доказательство очевидно, его не так просто найти [^nolz]. Мы обобщаем задачу: доказываем, что для любого k, если `1 ≤ k`, то `k` не равно нулю. Это обобщение позволяет использовать индукцию по `1 ≤ k`.
@@ -785,9 +785,9 @@ theorem not_one_le_zero: ¬1 ≤ 0 := by
 
 ```lean
 example: ∀k: Nat, 1 ≤ k → k = 0 → False :=
-  λk ok => @Nat.le.recOn _ (λk _ => k = 0 → False) k ok
-    (λ(h: 1 = 0) => succ_ne_zero 0 h)
-    (λ{k} _ _ (ksz: k.succ = 0) => succ_ne_zero k ksz)
+  λk ok ↦ @Nat.le.recOn _ (λk _ ↦ k = 0 → False) k ok
+    (λ(h: 1 = 0) ↦ succ_ne_zero 0 h)
+    (λ{k} _ _ (ksz: k.succ = 0) ↦ succ_ne_zero k ksz)
 ```
 
 Вот почему эта книга уделяет такое внимание основам: когда автоматика подводит, основы позволяют взять управление в свои руки.
@@ -828,7 +828,7 @@ theorem not_add_le_self (n: Nat){k: Nat}(pk: 0 < k): ¬(n + k ≤ n) := by reade
 theorem exists_of_le {n k: Nat}(le: n ≤ k): ∃p, n + p = k :=
   le.recOn
     ⟨0, rfl⟩
-    (λ_ ⟨p,h⟩ => ⟨p.succ, congrArg Nat.succ h⟩)
+    (λ_ ⟨p,h⟩ ↦ ⟨p.succ, congrArg Nat.succ h⟩)
 
 theorem le_of_exists {n k: Nat}: (ex: ∃d, n + d = k) → n ≤ k := by
   refine k.recOn ?_ ?_
@@ -1001,17 +1001,17 @@ def decLe: (n m: Nat) → Decidable (n ≤ m)
 
 ```lean
 def Decidable.decide (p: Prop) [h: Decidable p]: Bool :=
-  h.casesOn (λ_ => false) (λ_ => true)
+  h.casesOn (λ_ ↦ false) (λ_ ↦ true)
 ```
 
 Очевидно, что для любого разрешимого высказывания `p`, `decide p` равно `false` когда `p` ложно, и равно `true`, когда `p` истинно. В стандартной библиотеке Lean это доказывается следующими леммами:
 
 ```lean
 def decide_eq_false [inst : Decidable p]: ¬p → (decide p) = false :=
-  inst.recOn (λ_ _ => rfl) (λhp hnp => absurd hp hnp)
+  inst.recOn (λ_ _ ↦ rfl) (λhp hnp ↦ absurd hp hnp)
 
 def decide_eq_true [inst : Decidable p]: p → (decide p) = true :=
-  inst.recOn (λhnp hp => absurd hp hnp) (λ_ _ => rfl)
+  inst.recOn (λhnp hp ↦ absurd hp hnp) (λ_ _ ↦ rfl)
 ```
 
 Но верно и обратное: из того, что `decide p = true` следует, что `p` истинно. Доказательство:
@@ -1289,10 +1289,10 @@ def Ind.{u} (r: α → α → Prop) :=
 
 ```lean
 def indSuccRel: Ind Nat.succRel :=
-  λ{M} (ind: ∀x, (∀y: Nat, y.succRel x → M y) → M x) => by
-    refine Nat.rec ?z (λn (h: M n) => ?_)
+  λ{M} (ind: ∀x, (∀y: Nat, y.succRel x → M y) → M x) ↦ by
+    refine Nat.rec ?z (λn (h: M n) ↦ ?_)
     · show M 0
-      exact ind 0 (λn s => absurd s (succ_ne_zero n))
+      exact ind 0 (λn s ↦ absurd s (succ_ne_zero n))
     · suffices hk: ∀k, k.succRel n.succ → M k from ind n.succ hk
       intro k s
       have: k = n := congrArg Nat.pred s
@@ -1334,8 +1334,8 @@ def wf_of_ind {r: α → α → Prop}(ind: Ind.{0} r): ∀x, Acc r x :=
   by reader
 
 noncomputable def ind_of_wf {r: α → α → Prop}(wf: ∀x, Acc r x): Ind r :=
-  λ{M} (h: ∀x, (∀y, r y x → M y) → M x) x =>
-    show M x from (wf x).recOn (λx _ (wh: ∀y, r y x → M y) => h x wh)
+  λ{M} (h: ∀x, (∀y, r y x → M y) → M x) x ↦
+    show M x from (wf x).recOn (λx _ (wh: ∀y, r y x → M y) ↦ h x wh)
 ```
 
 Таким образом, каждое отношение является фундированным тогда и только тогда, когда оно индуктивно. В частности, отношение `Nat.succRel` является фундированным:
@@ -1367,7 +1367,7 @@ theorem acc_succ_rel: ∀n, Acc Nat.succRel n :=
 
 ```lean
 def Acc.inv {x y: α}(ax: Acc r x): r y x → Acc r y :=
-  ax.recOn (λx (f: ∀y, r y x → Acc r y) _ => f y)
+  ax.recOn (λx (f: ∀y, r y x → Acc r y) _ ↦ f y)
 ```
 
 С помощью которой мы докажем, что отношение «меньше или равно» на натуральных числах является фундированным:
@@ -1382,8 +1382,8 @@ def lt_wf (n: Nat): Acc Nat.lt n := by
     intro m h
     have elt: m = n ∨ m < n := eq_or_lt_of_le (le_of_succ_le_succ h)
     exact elt.elim
-      (λ(e: m = n) => e.symm ▸ an)
-      (λ(l: m < n) => Acc.inv an l)
+      (λ(e: m = n) ↦ e.symm ▸ an)
+      (λ(l: m < n) ↦ Acc.inv an l)
 ```
 
 Поскольку фундированность равносильная индуктивности, отсюда непосредственно следует принцип сильной индукции.
@@ -1421,7 +1421,7 @@ def modTwoFix: Nat → Nat :=
 
 ```lean
 def InvImage {α: Sort u}{β: Sort v}(r: β → β → Prop)(f: α → β): α → α → Prop :=
-  λx y => r (f x) (f y)
+  λx y ↦ r (f x) (f y)
 ```
 
 Докажем, что прообраз фундированного отношения является фундированным отношением.
@@ -1432,20 +1432,20 @@ def InvImage {α: Sort u}{β: Sort v}(r: β → β → Prop)(f: α → β): α �
 def acc_invImage {x: α}(f: α → β)(acc: Acc r (f x)): Acc (InvImage r f) x := by
   suffices h: ∀y, Acc r y → ∀w, f w = y → Acc (InvImage r f) w
     from h (f x) acc x rfl
-  refine λy (a: Acc r y) => a.recOn ?_
+  refine λy (a: Acc r y) ↦ a.recOn ?_
   intro z _ (h: ∀y, r y z → ∀t, f t = y → Acc (InvImage r f) t)
   show ∀w, f w = z → Acc (InvImage r f) w
   intro w e
   suffices h: ∀t, r (f t) (f w) → Acc (InvImage r f) t
     from Acc.intro _ h
-  exact λt ht => h _ (e ▸ ht) t rfl
+  exact λt ht ↦ h _ (e ▸ ht) t rfl
 ```
 
 Из доказанного непосредственно следует, что прообраз фундированного отношения это фундированное отношение:
 
 ```lean
 def wf_invImage (wf: ∀y: β, Acc r y)(f: α → β): ∀x: α, Acc (InvImage r f) x :=
-  λx => acc_invImage f (wf (f x))
+  λx ↦ acc_invImage f (wf (f x))
 ```
 
 Поскольку отношение «меньше или равно», определённое на натуральных числах, фундированно, любая функция из $α$ в натуральные числа (которую будем называть мерой значений типа α) задаёт фундированное отношение на $α$:
@@ -1486,7 +1486,7 @@ decreasing_by
 ```lean
 def inf_desc {r: α → α → Prop}(arx: Acc r x){p: α → Prop}
     (h: ∀x, p x → ∃y, r y x ∧ p y): p x → False :=
-  arx.recOn (λx _ (ih: ∀y, r y x → p y → False) px =>
+  arx.recOn (λx _ (ih: ∀y, r y x → p y → False) px ↦
     let ⟨y, ⟨ryx, py⟩⟩ := h x px
     ih y ryx py)
 ```
@@ -1503,7 +1503,7 @@ def inf_desc {r: α → α → Prop}(arx: Acc r x){p: α → Prop}
 
 ```lean
 def div_rec_lemma {n k: Nat}: (0 < k ∧ k ≤ n) → n - k < n :=
-  λ⟨(pk: 0 < k), (kn: k ≤ n)⟩ => sub_lt (le_trans pk kn) pk
+  λ⟨(pk: 0 < k), (kn: k ≤ n)⟩ ↦ sub_lt (le_trans pk kn) pk
 
 def Nat.div (n k: Nat) : Nat :=
   if h: 0 < k ∧ k ≤ n then
@@ -1601,7 +1601,7 @@ decreasing_by exact div_rec_lemma h
 
 ```lean
 theorem mod_add_div (n k: Nat): n % k + k * (n / k) = n := by
-  refine divmod_ind (motive := λn k => n % k + k * (n / k) = n) ?_ ?_ n k
+  refine divmod_ind (motive := λn k ↦ n % k + k * (n / k) = n) ?_ ?_ n k
   · intro n k (h: ¬(0 < k ∧ k ≤ n))
     calc
       n % k + k * (n / k) = n + k * 0 := by rw [div_eq_if_neg h, mod_eq_if_neg h]
@@ -1654,10 +1654,10 @@ theorem mul_mod_mul_left (m n k: Nat): m * n % (m * k) = m * (n % k) := by
   | Nat.zero => simp only [zero_mul, mod_zero]
   | Nat.succ m =>
     refine divmod_ind
-      (motive := λn k => m.succ * n % (m.succ * k) = m.succ * (n % k)) ?_ ?_ n k
+      (motive := λn k ↦ m.succ * n % (m.succ * k) = m.succ * (n % k)) ?_ ?_ n k
     · intro n k (h: ¬(0 < k ∧ k ≤ n))
       have: ¬(0 < m.succ * k ∧ m.succ * k ≤ m.succ * n) :=
-        h ∘ (λ⟨msk, k_le_msn⟩ =>
+        h ∘ (λ⟨msk, k_le_msn⟩ ↦
           ⟨pos_of_mul_pos_left msk,
           le_of_mul_le_mul_left (zero_lt_succ m) k_le_msn⟩)
       calc
